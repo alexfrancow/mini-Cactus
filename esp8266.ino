@@ -42,18 +42,18 @@ void scanHosts(String ssid){
     // Print host data
     Serial.printf("Destination host data:\n");
     Serial.printf(
-      "    IP address= %s\n",
+      "IP address= %s\n",
       response.DestIPAddress.toString().c_str());
       
     if(response.DestMacAddress != nullptr){
       Serial.printf(
-        "    MAC address= " MACSTR "\n",
+        "MAC address= " MACSTR "\n",
         MAC2STR(response.DestMacAddress->addr));
     }
     
     if(response.DestHostname != ""){
       Serial.printf(
-        "    DNS name= %s\n",
+        "DNS name= %s\n",
         response.DestHostname.c_str());
     }
 
@@ -65,19 +65,21 @@ void scanHosts(String ssid){
     "\n\nPinging default gateway with IP %s\n",
     WiFi.gatewayIP().toString().c_str());
     
-  if(pinger.Ping(WiFi.gatewayIP()) == false){
+  if(pinger.Ping(WiFi.gatewayIP(), 1) == false){
     Serial.println("Error during last ping command.");
   }
-  delay(5000);
+  delay(1000);
 
   // Ping the network
   for(int i=1; i<255; i++){
     IPAddress ip (WiFi.gatewayIP()[0], WiFi.gatewayIP()[1], WiFi.gatewayIP()[2], i);
     Serial.println(ip);
-    if(pinger.Ping(IPAddress(ip)) == false){
+    // The function accept a second integer parameter count that 
+    // specify how many pings has to be sent:
+    if(pinger.Ping(IPAddress(ip), 1) == false){
       Serial.println("Error during last ping command.");
     }
-    delay(5000);
+    delay(1000);
   }
 }
 
