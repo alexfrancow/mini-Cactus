@@ -44,7 +44,7 @@ for ssid in ssids:
 ## TODO
 
 - Multithreading ESP8266 devices :white_check_mark:
-- Ports detector
+- Info gathering with port scanning 
 - WPS - Pixie Dust Attack
 - Web Interface (?)
 - BD to Pandas and send it to Kibana
