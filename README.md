@@ -26,7 +26,6 @@ def av_arduino(coms):
             break
         else:
             time.sleep(5)
-            print("aun no")
             continue
     av_com = random.choice(av_coms)
     return av_com
