@@ -49,3 +49,4 @@ for ssid in ssids:
 - BD to Pandas and send it to Kibana
 - Evil twin mode
 - Improve the code
+- LCD eyes
