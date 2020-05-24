@@ -40,3 +40,9 @@ for ssid in ssids:
         thread_with_args.join()
         time.sleep(5)
 ```
+
+## TODO
+
+- Multithreading ESP8266 devices :white_check_mark:
+- WPS - Pixie Dust Attack
+- 
