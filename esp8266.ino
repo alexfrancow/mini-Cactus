@@ -27,8 +27,9 @@ void scanHosts(String ssid){
 
   int i = 0;
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.print(++i); Serial.print(' ');
+    delay(1000); 
+    Serial.print("Connecting:\t");
+    Serial.println(++i);
   }
 
   Serial.println('\n');
@@ -81,6 +82,7 @@ void scanHosts(String ssid){
     }
     delay(1000);
   }
+  return;
 }
 
 void loop() {
