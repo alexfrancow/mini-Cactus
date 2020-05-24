@@ -23,7 +23,8 @@ def av_arduino(coms):
             continue
     av_com = random.choice(av_coms)
     return av_com
-
+    
+ssids = ["MOYOXXL 2.0", "_ONOWiFi", "_ONOWiFiXXX"]
 for ssid in ssids:
     av_com = av_arduino(coms)
     print("Random:", av_com)
