@@ -50,3 +50,4 @@ for ssid in ssids:
 - Evil twin mode
 - Improve the code
 - LCD eyes
+- 3D printed case
