@@ -45,7 +45,7 @@ for ssid in ssids:
 
 - Multithreading ESP8266 devices :white_check_mark:
 - WPS - Pixie Dust Attack
-- Web Interface
+- Web Interface (?)
 - BD to Pandas and send it to Kibana
 - Evil twin mode
 - Improve the code (C++ and Python)
