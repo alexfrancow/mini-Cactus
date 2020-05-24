@@ -48,6 +48,6 @@ for ssid in ssids:
 - Web Interface
 - BD to Pandas and send it to Kibana
 - Evil twin mode
-- Improve the code
+- Improve the code (C++ and Python)
 - LCD eyes
 - 3D printed case
