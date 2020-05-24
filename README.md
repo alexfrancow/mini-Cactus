@@ -53,3 +53,4 @@ for ssid in ssids:
 - Improve the code (C++ and Python)
 - LCD eyes
 - 3D printed case
+- Drone PoC (?)
