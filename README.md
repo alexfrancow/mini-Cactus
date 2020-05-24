@@ -1,6 +1,10 @@
 # mini-Cactus
 mini-Cactus discovery
 
+## Requirements
+
+You must install the USB to UART driver:
+- https://www.silabs.com/products/development-tools/software/usb-to-uart-bridge-vcp-drivers
 
 ## Multi-Threading
 
