@@ -47,3 +47,4 @@ for ssid in ssids:
 - WPS - Pixie Dust Attack
 - Web Interface
 - BD to Pandas and send it to Kibana
+- Evil twin mode
