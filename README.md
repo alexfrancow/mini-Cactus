@@ -1,5 +1,5 @@
 # mini-Cactus
-mini-Cactus discovery, at the moment it's just a PoC.
+:cactus: mini-Cactus discovery, at the moment it's just a PoC.
 
 [![](https://img.shields.io/badge/twitter-@alexfrancow-00aced?style=flat-square&logo=twitter&logoColor=white)](https://twitter.com/alexfrancow) [![](https://img.shields.io/badge/linkedin-@alexfrancow-0084b4?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/alexfrancow)
 
