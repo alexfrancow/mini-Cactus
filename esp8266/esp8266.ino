@@ -20,7 +20,7 @@ void setup() {
   Serial.println("Welcome to mini-CACTUS discovery");
 }
 
-void scanHosts(String ssid){ 
+void scanHosts(String ssid){ Serial.println('\n');
   WiFi.begin(ssid);
   Serial.print("Connecting to ");
   Serial.print(ssid); Serial.println(" ...");
@@ -38,6 +38,27 @@ void scanHosts(String ssid){
   Serial.println(WiFi.localIP());
   Serial.print("Gateway IP address:\t");
   Serial.println(WiFi.gatewayIP());
+
+  pinger.OnReceive([](const PingerResponse& response)
+  {
+    if (response.ReceivedResponse)
+    {
+      Serial.printf(
+        "Reply from %s: bytes=%d time=%lums TTL=%d\n",
+        response.DestIPAddress.toString().c_str(),
+        response.EchoMessageSize - sizeof(struct icmp_echo_hdr),
+        response.ResponseTime,
+        response.TimeToLive);
+    }
+    else
+    {
+      Serial.printf("Request timed out.\n");
+    }
+
+    // Return true to continue the ping sequence.
+    // If current event returns false, the ping sequence is interrupted.
+    return true;
+  });
   
   pinger.OnEnd([](const PingerResponse& response){
     if(response.TotalReceivedResponses > 0)
