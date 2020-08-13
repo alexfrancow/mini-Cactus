@@ -7,28 +7,8 @@ import sys
 import json
 import hashlib 
 from threading import Thread
+import multiprocessing
 
-conn = sqlite3.connect('mini-cactus.db')
-cursor = conn.cursor()
-print("Opened database successfully")
-'''
-Status:
-0: Can't connect
-1: OK
-2: Time out
-'''
-try:
-    conn.execute('''CREATE TABLE discovery
-        (SSID_md5 TEXT PRIMARY KEY NOT NULL UNIQUE,
-        SSID_mac TEXT NOT NULL,
-        SSID TEXT  NOT NULL UNIQUE,
-        JSON_data           JSON    NOT NULL,
-        SSID_Status            INT     NOT NULL,
-        Location TEXT NOT NULL)''')
-    print("Table created successfully")
-except:
-    print("Table was created previusly")
-conn.commit()
 
 def list_com():
     arduino_coms = []
@@ -59,7 +39,7 @@ def save_db(ssid, json_data, status):
     conn.commit()
     return True
 
-def scan_net(com):
+def scan_net(ser, ssid, com):
     json_data = {}
     json_data[ssid] = {}
     timeout = time.time() + 15
@@ -77,8 +57,9 @@ def scan_net(com):
                 ip_address = cc.split("IP_address: ")[1].split(",")[0]
                 host_information = cc.split("Host:{")[1].split("}")[0]
                 json_data[ssid][ip_address] = {host_information}
-                    
+
             if ".254" in cc:
+                time.sleep(2)
                 break
         except:
             continue
@@ -87,15 +68,16 @@ def scan_net(com):
     return json_data
 
 
-def use_arduino(com, ssid):
-    print("Using: ", com)
+def use_arduino(ser, com, ssid):
+    print("[?] Using: ", com)
+    print("[?] SSID: ", ssid)
     ser.port = com
     ser.open()
     time.sleep(1)
     ssid_bd = ssid
     ssid = bytes(ssid, encoding='utf-8')
     ser.write(ssid)
-    json_data = scan_net(com)
+    json_data = scan_net(ser, ssid, com)
     ser.close()
     status = "0"
     if "MAC_address:" in str(json_data):
@@ -103,40 +85,65 @@ def use_arduino(com, ssid):
     save_db(ssid_bd, json_data, status)
     return True
 
-def av_arduino(coms):
-    av_coms = []
+def av_arduino(ser, coms):
     while True:
+        av_coms = []
         for com in coms:
             ser.port = com
-            if ser.is_open == True:
+            try:
+                ser.open()
+                ser.close()
+            except:
                 continue
             else:
                 av_coms.append(com)
+      
         if av_coms:
             break
         else:
             time.sleep(5)
-            print("aun no")
             continue
 
-    av_com = random.choice(av_coms)
-    return av_com
-
-        
-ser = serial.Serial()
-ser.baudrate = 9600
-coms = list_com()
-ssids = ["MOYOXXL 2.0", "_ONOWiFi", "_ONOWiFiXXX"]
-print("SSIDS:", list(ssids))
-print("Arduino ports:", coms)
+    return av_coms
 
 
-for ssid in ssids:
-    av_com = av_arduino(coms)
-    print("Random:", av_com)
-    if av_com:
-        thread_with_args = Thread(target=use_arduino, args=(av_com, ssid))
-        thread_with_args.start()
-        thread_with_args.join()
-        time.sleep(5)
-        
+if __name__ == '__main__':
+    conn = sqlite3.connect('mini-cactus.db')
+    cursor = conn.cursor()
+    print("Opened database successfully")
+    try:
+        conn.execute('''CREATE TABLE discovery
+            (SSID_md5 TEXT NOT NULL,
+            SSID_mac TEXT NOT NULL,
+            SSID TEXT  NOT NULL,
+            JSON_data           JSON    NOT NULL,
+            SSID_Status            INT     NOT NULL,
+            Location TEXT)''')
+        print("Table created successfully")
+    except:
+        print("Table was created previusly")
+    conn.commit()
+    
+    ser = serial.Serial()
+    ser.baudrate = 9600
+    coms = list_com()
+    ssids = ["MOYOXXL 2.0", "FaryLink_C5BDD4", "_ONOWiFi", "FaryLink_C5BDD4", "_ONOWiFiXXX"]
+    #ssids = ["FaryLink_C5BDD4"]
+    print("SSIDS:", list(ssids))
+    print("Arduino ports:", coms)
+
+    n_ssids = len(ssids)
+    num = 0
+    while True:
+        av_coms = av_arduino(ser, coms)
+        if len(av_coms) > 0:
+            print("[?] Availables: ", av_coms)
+            threads = []
+            for av_com in av_coms:
+                threads.append(av_com+"_thread")
+                com_tread = av_com+"_thread"
+                print("[!] Starting: ",com_tread)
+                com_tread = multiprocessing.Process(target=use_arduino, args=(ser, av_com, ssids[num],)).start()
+                num += 1
+
+        time.sleep(2)
