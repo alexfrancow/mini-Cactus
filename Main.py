@@ -58,7 +58,7 @@ def scan_net(ser, ssid, com):
                 host_information = cc.split("Host:{")[1].split("}")[0]
                 json_data[ssid][ip_address] = {host_information}
 
-            if ".254" in cc:
+            if ".22" in cc:
                 time.sleep(2)
                 break
         except:
@@ -127,7 +127,7 @@ if __name__ == '__main__':
     ser = serial.Serial()
     ser.baudrate = 9600
     coms = list_com()
-    ssids = ["MOYOXXL 2.0", "FaryLink_C5BDD4", "_ONOWiFi", "FaryLink_C5BDD4", "_ONOWiFiXXX"]
+    ssids = ["alexfrancow", "MOYOXXL 2.0", "FaryLink_C5BDD4", "alexfrancow", "_ONOWiFi", "FaryLink_C5BDD4", "_ONOWiFiXXX"]
     #ssids = ["FaryLink_C5BDD4"]
     print("SSIDS:", list(ssids))
     print("Arduino ports:", coms)
@@ -147,3 +147,4 @@ if __name__ == '__main__':
                 num += 1
 
         time.sleep(2)
+  
