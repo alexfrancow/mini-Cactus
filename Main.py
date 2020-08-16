@@ -47,7 +47,9 @@ def scan_net(ser, ssid, com):
         try:
             cc = str(ser.readline())
             if "Connecting:" not in cc:
-                print(cc[2:][:-3])
+                if cc and cc != "\r" or cc != "\n'":
+                    #print(cc.replace("b'", "").replace("\\r\\n'", "")).replace("\n'", "")
+                    print(cc[2:][:-3]).replace("\r", "")
                     
             if "Connecting" in cc and time.time() > timeout:
                 print("Imposible conectar")
@@ -61,6 +63,7 @@ def scan_net(ser, ssid, com):
             if ".22" in cc:
                 time.sleep(2)
                 break
+
         except:
             continue
 
@@ -84,6 +87,32 @@ def use_arduino(ser, com, ssid):
         status = "1"
     save_db(ssid_bd, json_data, status)
     return True
+
+def scanAPs(ser, com):
+    ser.port = com
+    ser.open()
+    time.sleep(1)
+    function = bytes("scanAPs()", encoding='utf-8')
+    ser.write(function)
+    json_data = ""
+    while True:
+        cc = str(ser.readline())
+        if "{\"Networks" in cc:
+            json_data = cc.replace("b'", "").replace("\\r\\n'", "")
+            break
+        if cc and cc != "\r":
+            print(cc.replace("b'", "").replace("\\r\\n'", ""))
+
+    json_data = json.loads(json_data)
+    open_networks = []
+    for v, k in json_data.items():
+        for v2, k2 in k.items():
+            if k2["Enc"] == "open":
+                open_networks.append(k2["SSID"])
+    print("Open networks:", open_networks)
+    time.sleep(5)
+    ser.close()
+    return open_networks
 
 def av_arduino(ser, coms):
     while True:
@@ -127,7 +156,8 @@ if __name__ == '__main__':
     ser = serial.Serial()
     ser.baudrate = 9600
     coms = list_com()
-    ssids = ["alexfrancow", "MOYOXXL 2.0", "FaryLink_C5BDD4", "alexfrancow", "_ONOWiFi", "FaryLink_C5BDD4", "_ONOWiFiXXX"]
+    ssids = scanAPs(ser, coms[0])
+    #ssids = ["alexfrancow", "MOYOXXL 2.0", "FaryLink_C5BDD4", "alexfrancow", "_ONOWiFi", "FaryLink_C5BDD4", "_ONOWiFiXXX"]
     #ssids = ["FaryLink_C5BDD4"]
     print("SSIDS:", list(ssids))
     print("Arduino ports:", coms)
@@ -147,4 +177,3 @@ if __name__ == '__main__':
                 num += 1
 
         time.sleep(2)
-  
