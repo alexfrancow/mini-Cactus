@@ -109,11 +109,11 @@ void scanHosts(String ssid){ Serial.println('\n');
   return;
 }
 
-void scanWifi(){
-  Serial.print("Scan start ... ");
+void scanAPs(){
+  //Serial.print("Scan start ... ");
   int n = WiFi.scanNetworks();
-  Serial.print(n);
-  Serial.println(" network(s) found:");
+  //Serial.print(n);
+  //Serial.println(" network(s) found:");
   Serial.print("{Networks:[");
   for (int i = 0; i < n; i++)
   {
@@ -130,14 +130,20 @@ void loop() {
   if(Serial.available()){
       incomingByte = Serial.readString();
       incomingByte.trim();
-      if(incomingByte.substring(0) == "scanWifi()"){
-        Serial.print("I received: ");
+      if(incomingByte.substring(0) == "scanAPs()"){
+        Serial.print("[");
+        Serial.print(WiFi.macAddress());
+        Serial.print("] ");
+        Serial.print("received: ");
         Serial.print(incomingByte);
         Serial.println(" function");
-        scanWifi();
+        scanAPs();
       }
       else {
-        Serial.print("I received: ");
+        Serial.print("[");
+        Serial.print(WiFi.macAddress());
+        Serial.print("] ");
+        Serial.print("received: ");
         Serial.print(incomingByte);
         Serial.println(" SSID");
         scanHosts(incomingByte);
