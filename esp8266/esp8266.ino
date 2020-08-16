@@ -114,15 +114,16 @@ void scanAPs(){
   int n = WiFi.scanNetworks();
   //Serial.print(n);
   //Serial.println(" network(s) found:");
-  Serial.print("{Networks:[");
+  Serial.print("{\"Networks\":{");
   for (int i = 0; i < n; i++)
   {
     if(i>0){
       Serial.print(", ");
     }
-    Serial.print(WiFi.SSID(i));
+    //Serial.print(WiFi.SSID(i));
+    Serial.printf("\"%d\":{\"SSID\":\"%s\", \"Ch\":\"%d\", \"dBm\":\"%d\", \"Enc\":\"%s\"}", i+1, WiFi.SSID(i).c_str(), WiFi.channel(i), WiFi.RSSI(i), WiFi.encryptionType(i) == ENC_TYPE_NONE ? "open" : "closed");
   }
-  Serial.println("]}");
+  Serial.println("}}");
   delay(1000);
 }
 
