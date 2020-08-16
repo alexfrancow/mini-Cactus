@@ -109,12 +109,38 @@ void scanHosts(String ssid){ Serial.println('\n');
   return;
 }
 
+void scanWifi(){
+  Serial.print("Scan start ... ");
+  int n = WiFi.scanNetworks();
+  Serial.print(n);
+  Serial.println(" network(s) found:");
+  Serial.print("{Networks:[");
+  for (int i = 0; i < n; i++)
+  {
+    if(i>0){
+      Serial.print(", ");
+    }
+    Serial.print(WiFi.SSID(i));
+  }
+  Serial.println("]}");
+  delay(1000);
+}
+
 void loop() {
   if(Serial.available()){
       incomingByte = Serial.readString();
-      Serial.print("I received: ");
-      Serial.println(incomingByte);
-      scanHosts(incomingByte);
-      //scanHosts("MOYOXXL 2.0");
+      incomingByte.trim();
+      if(incomingByte.substring(0) == "scanWifi()"){
+        Serial.print("I received: ");
+        Serial.print(incomingByte);
+        Serial.println(" function");
+        scanWifi();
+      }
+      else {
+        Serial.print("I received: ");
+        Serial.print(incomingByte);
+        Serial.println(" SSID");
+        scanHosts(incomingByte);
+      }
   }
 }
